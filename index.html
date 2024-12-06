@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Buatan MouLan</title>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h3>Tolong Kamu Masukan Tulisan Atau URL Kamu</h3>
+        <input type="text" placeholder="Tulisan atau URL" id="qrText"/>
+        
+        <div id="imgBox" style="display: none;">
+            <canvas id="qrCanvas"></canvas>
+        </div>
+        <button onclick="generateQR()">Hasilkan QR Code</button>
+        <button onclick="downloadQR()">Unduh QR Code</button>
+        <a href="https://www.qrscanner.net">
+          Scan QR Code
+        </a>
+    </div>
+    
+    <script>
+        let qrText = document.getElementById("qrText");
+        let qrCanvas = document.getElementById("qrCanvas");
+        let imgBox = document.getElementById("imgBox");
+        let qr = new QRious({
+            element: qrCanvas,
+            size: 150
+        });
+
+        function generateQR() {
+            if (qrText.value.length > 0) {
+                qr.set({
+                    value: qrText.value
+                });
+                imgBox.style.display = 'block';
+                setTimeout(() => {
+                imgBox.classList.add('show-img');
+        }, 10);
+            } else {
+                qrText.classList.add('error');
+                setTimeout(() => {
+                    qrText.classList.remove('error');
+                }, 1000);
+            }
+        }
+
+        function downloadQR() {
+            if (qrText.value.length > 0) {
+                const link = document.createElement('a');
+                const fileName = qrText.value.replace(/[^a-zA-Z0-9]/g, '_') + '.png';
+                link.href = qrCanvas.toDataURL("image/png");
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert("Masukkan teks atau URL terlebih dahulu.");
+            }
+        }
+    </script>
+</body>
+</html>
